@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     avro_contract_testing (0.1.0)
+      avro-patches (~> 0.4)
       avro_turf (~> 0.0)
       fog-aws (~> 3.0)
 
@@ -10,6 +11,8 @@ GEM
   specs:
     avro (1.8.2)
       multi_json
+    avro-patches (0.4.1)
+      avro (= 1.8.2)
     avro_turf (0.8.1)
       avro (>= 1.7.7, < 1.9)
       excon (~> 0.45)

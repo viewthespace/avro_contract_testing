@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'fog-aws', '~> 3.0'
   spec.add_dependency 'avro_turf', '~> 0.0'
+  spec.add_dependency 'avro-patches', '~> 0.4'
 
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'rake', '~> 10.0'
