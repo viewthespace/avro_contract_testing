@@ -1,5 +1,6 @@
 require 'avro_turf'
 require 'fog-aws'
+require 'avro_contract_testing/consumer'
 
 module AvroContractTesting
   class SchemaRepository
@@ -24,10 +25,22 @@ module AvroContractTesting
         )
       end
 
+      def consumers(schema_name)
+        files = storage.directories.get(config.s3_bucket_name).files
+        files.all(prefix: schema_name + '/').map do |schema_file|
+          consumer_name = consumer_name(schema_file.key)
+          AvroContractTesting::Consumer.new(name: consumer_name, schema: schema_file.body)
+        end
+      end
+
       private
 
       def config
         AvroContractTesting.configuration
+      end
+
+      def consumer_name(key)
+        key.scan(%r{^[^/]+/(.*).avsc$}).first.first
       end
     end
   end

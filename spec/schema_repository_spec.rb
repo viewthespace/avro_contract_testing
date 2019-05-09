@@ -42,4 +42,23 @@ describe AvroContractTesting::SchemaRepository do
       expect(uploaded_schema).to eq full_schema
     end
   end
+
+  describe '.consumers' do
+    let(:schema_body) { '{"name":"test","type":"record","fields":[]}' }
+
+    before do
+      storage.directories.get(s3_bucket_name).files.create(
+        key: 'test_producer_schema_name/test_consumer_application.avsc',
+        body: schema_body,
+        public: false,
+        content_type: 'application/json'
+      )
+    end
+
+    subject { described_class.consumers('test_producer_schema_name').first }
+
+    it { is_expected.to be_a(AvroContractTesting::Consumer) }
+    it { expect(subject.name).to eq 'test_consumer_application' }
+    it { expect(subject.schema).to eq(Avro::Schema.parse(schema_body)) }
+  end
 end
