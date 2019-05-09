@@ -1,0 +1,10 @@
+{
+  "name": "test_alias",
+  "type": "record",
+  "fields": [
+    {
+      "name": "id",
+      "type": "int"
+    }
+  ]
+}
