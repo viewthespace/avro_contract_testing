@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'avro_contract_testing/version'
 require 'avro_contract_testing/configuration'
 

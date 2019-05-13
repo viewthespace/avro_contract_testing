@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'avro_turf'
 require 'fog-aws'
 require 'avro_contract_testing/consumer'
