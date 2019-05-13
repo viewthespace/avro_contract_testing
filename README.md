@@ -14,21 +14,20 @@ And then execute:
 
 ## Usage
 
-#### 1. Configuration
-Options to be configured on application boot:
+#### 1. Options to be configured on application boot:
 
-```
+```ruby
 AvroContractTesting.configure do |config|
-  config.s3_bucket_name = <<s3_bucket_name>>
-  config.application_name = <<application_name>>
-  config.aws_access_key_id = <<aws_access_key_id>>
-  config.aws_secret_access_key = <<aws_scecret_key>>
-  config.schema_path = <<path_to_schemas_path>>
+  config.s3_bucket_name = S3_BUCKET_NAME
+  config.application_name = APPLICATION_NAME
+  config.aws_access_key_id = AWS_ACCESS_KEY_ID
+  config.aws_secret_access_key = AWS_SCECRET_KEY
+  config.schema_path = SCHEMA_PATH
 end
 ``` 
 
 #### 2. Example producer application testing consumer schemas for compatibility:
-```
+```ruby
 describe 'test schema' do
  let(:producer_schema) { AvroTurf::SchemaStore.new(path: SCHEMA_PATH).find('test_schema').to_s }
 
@@ -41,7 +40,9 @@ end
 ```
 
 #### 3. How to upload consumer schema to s3 bucket:
-`AvroContractTesting:SchemaRespostiory.upload(<<schema_name>>)`
+```ruby
+AvroContractTesting::SchemaRepository.upload(SCHEMA_NAME)
+```
 
 ## Development
 
