@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Tania Abdollahi']
   spec.email         = ['tania.abdollahi@vts.com']
   spec.summary       = 'Provides utilities for running contract tests against avro schemas'
-  spec.homepage      = 'https://github.com/tabdollahi/avro_contract_testing'
+  spec.homepage      = 'https://github.com/viewthespace/avro_contract_testing'
   spec.license       = 'MIT'
   spec.require_paths = ['lib']
 

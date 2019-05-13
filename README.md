@@ -1,28 +1,31 @@
 # AvroContractTesting
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/avro_contract_testing`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'avro_contract_testing'
+gem 'avro_contract_testing', git: 'https://github.com/viewthespace/avro_contract_testing.git'
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install avro_contract_testing
-
 ## Usage
 
-TODO: Write usage instructions here
+### Configuration
+Options to be configured on application boot:
+
+```
+    AvroContractTesting.configure do |config|
+      config.s3_bucket_name = <<s3_bucket_name>>
+      config.application_name = <<application_name>>
+      config.aws_access_key_id = <<aws_access_key_id>>
+      config.aws_secret_access_key = <<aws_scecret_key>>
+      config.schema_path = <<path_to_schemas_path>>
+    end
+```
 
 ## Development
 
