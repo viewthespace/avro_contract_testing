@@ -2,6 +2,8 @@
 
 require 'avro_contract_testing/version'
 require 'avro_contract_testing/configuration'
+require 'avro_contract_testing/schema_repository'
+require 'avro_contract_testing/consumer'
 
 module AvroContractTesting
   class Error < StandardError; end
