@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'avro_turf'
-require 'avro-patches'
 
 module AvroContractTesting
   class Consumer
