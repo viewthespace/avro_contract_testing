@@ -7,12 +7,16 @@ require 'avro_contract_testing/consumer'
 module AvroContractTesting
   class SchemaRepository
     class << self
-      def upload(schema_name)
+      ROLES = %w[producer consumer].freeze
+
+      def upload(schema_name, role = 'consumer')
+        raise 'Schema role must be either producer or consumer' unless ROLES.include?(role)
+
         files = storage.directories.get(config.s3_bucket_name).files
         schema_store = AvroTurf::SchemaStore.new(path: config.schema_path)
 
         files.create(
-          key: "#{schema_name}/#{config.application_name}.avsc",
+          key: "#{role}/#{schema_name}/#{config.application_name}.avsc",
           body: schema_store.find(schema_name).to_s,
           public: false,
           content_type: 'application/json'

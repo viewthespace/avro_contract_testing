@@ -8,6 +8,8 @@ describe AvroContractTesting::SchemaRepository do
   let(:s3_bucket_name) { 'test_bucket_name' }
   let(:schema_path) { Pathname.new(File.expand_path(__dir__)).join('../fixtures/schemas') }
   let(:application_name) { 'test_app_name' }
+  let(:producer_role) { 'producer' }
+  let(:consumer_role) { 'consumer' }
   let(:access_key_id) { 'test_id' }
   let(:access_key) { 'test_key' }
 
@@ -30,10 +32,10 @@ describe AvroContractTesting::SchemaRepository do
   end
 
   describe '.upload' do
-    it 'uploads a schema to s3' do
-      described_class.upload('test')
+    it 'uploads a consumer schema to s3' do
+      described_class.upload('test', consumer_role)
 
-      expected_contract = "test/#{application_name}.avsc"
+      expected_contract = "#{consumer_role}/test/#{application_name}.avsc"
       uploaded_schema = storage
         .directories.get(s3_bucket_name)
         .files.get(expected_contract)
@@ -42,6 +44,40 @@ describe AvroContractTesting::SchemaRepository do
       alias_schema = '{"type":"record","name":"test_alias","fields":[{"name":"id","type":"int"}]}'
       full_schema = '{"type":"record","name":"test","fields":[{"name":"id","type":"int"},{"name":"test_alias","type":' + alias_schema + '}]}'
       expect(uploaded_schema).to eq full_schema
+    end
+
+    it 'uploads a producer schema to s3' do
+      described_class.upload('test', producer_role)
+
+      expected_contract = "#{producer_role}/test/#{application_name}.avsc"
+      uploaded_schema = storage
+        .directories.get(s3_bucket_name)
+        .files.get(expected_contract)
+        .body
+
+      alias_schema = '{"type":"record","name":"test_alias","fields":[{"name":"id","type":"int"}]}'
+      full_schema = '{"type":"record","name":"test","fields":[{"name":"id","type":"int"},{"name":"test_alias","type":' + alias_schema + '}]}'
+      expect(uploaded_schema).to eq full_schema
+    end
+
+    it 'assumes schema role is consumer if not specified' do
+      described_class.upload('test')
+
+      expected_contract = "#{consumer_role}/test/#{application_name}.avsc"
+      uploaded_schema = storage
+        .directories.get(s3_bucket_name)
+        .files.get(expected_contract)
+        .body
+
+      alias_schema = '{"type":"record","name":"test_alias","fields":[{"name":"id","type":"int"}]}'
+      full_schema = '{"type":"record","name":"test","fields":[{"name":"id","type":"int"},{"name":"test_alias","type":' + alias_schema + '}]}'
+      expect(uploaded_schema).to eq full_schema
+    end
+
+    it 'raises error if role is not consumer or producer' do
+      expect { described_class.upload('test', 'banana') }.to raise_error(
+        'Schema role must be either producer or consumer'
+      )
     end
   end
 
