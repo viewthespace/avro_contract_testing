@@ -33,10 +33,18 @@ module AvroContractTesting
 
       def consumers(schema_name)
         files = storage.directories.get(config.s3_bucket_name).files
-        files.all(prefix: schema_name + '/').map do |schema_file|
+
+        # TODO: remove without-prefix logic once all schemas are moved over to the prefix convention
+        schemas_without_prefix = files.all(prefix: schema_name + '/').map do |schema_file|
           consumer_name = consumer_name(schema_file.key)
           AvroContractTesting::Consumer.new(name: consumer_name, schema: schema_file.body)
         end
+
+        schemas_with_prefix = files.all(prefix: 'consumer/' + schema_name + '/').map do |schema_file|
+          consumer_name = consumer_name(schema_file.key)
+          AvroContractTesting::Consumer.new(name: consumer_name, schema: schema_file.body)
+        end
+        [schemas_with_prefix, schemas_without_prefix].flatten
       end
 
       private

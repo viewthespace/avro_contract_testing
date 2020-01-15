@@ -27,6 +27,7 @@ describe AvroContractTesting::SchemaRepository do
   end
 
   after do
+    storage.directories.get(s3_bucket_name).destroy!
     Fog.unmock!
     AvroContractTesting.reset
   end
@@ -82,21 +83,57 @@ describe AvroContractTesting::SchemaRepository do
   end
 
   describe '.consumers' do
-    let(:schema_body) { '{"name":"test","type":"record","fields":[]}' }
+    let(:consumer_schema_body) { '{"name":"consumer test","type":"record","fields":[]}' }
+    let(:producer_schema_body) { '{"name":"producer test","type":"record","fields":[]}' }
 
     before do
       storage.directories.get(s3_bucket_name).files.create(
-        key: 'test_producer_schema_name/test_consumer_application.avsc',
-        body: schema_body,
+        key: 'test_schema_name/test_application.avsc',
+        body: consumer_schema_body,
         public: false,
         content_type: 'application/json'
       )
     end
 
-    subject(:consumer) { described_class.consumers('test_producer_schema_name').first }
+    subject(:consumer) { described_class.consumers('test_schema_name').first }
 
     it { is_expected.to be_a(AvroContractTesting::Consumer) }
-    it { expect(consumer.name).to eq 'test_consumer_application' }
-    it { expect(consumer.schema).to eq(Avro::Schema.parse(schema_body)) }
+    it { expect(consumer.name).to eq 'test_application' }
+    it { expect(consumer.schema).to eq(Avro::Schema.parse(consumer_schema_body)) }
+
+    context 'when there is an identical file with a consumer prefix' do
+      before do
+        storage.directories.get(s3_bucket_name).files.create(
+          key: "#{consumer_role}/test_schema_name/test_application.avsc",
+          body: consumer_schema_body,
+          public: false,
+          content_type: 'application/json'
+        )
+      end
+
+      it 'retrieves both consumers from s3 with and without the prefix' do
+        expect(described_class.consumers('test_schema_name').length).to eq 2
+      end
+    end
+
+    context 'when there are consumers and producers for the same schema' do
+      before do
+        storage.directories.get(s3_bucket_name).files.create(
+          key: "#{producer_role}/test_schema_name/test_application.avsc",
+          body: producer_schema_body,
+          public: false,
+          content_type: 'application/json'
+        )
+      end
+
+      let(:consumer) { described_class.consumers('test_schema_name').first }
+
+      it 'only retrieves the consumer schema' do
+        expect(consumer.schema.name).to eq(Avro::Schema.parse(consumer_schema_body).name)
+        require 'pry'
+        # binding.pry
+        expect(described_class.consumers('test_schema_name').length).to eq 1
+      end
+    end
   end
 end
