@@ -130,8 +130,6 @@ describe AvroContractTesting::SchemaRepository do
 
       it 'only retrieves the consumer schema' do
         expect(consumer.schema.name).to eq(Avro::Schema.parse(consumer_schema_body).name)
-        require 'pry'
-        # binding.pry
         expect(described_class.consumers('test_schema_name').length).to eq 1
       end
     end
