@@ -21,6 +21,14 @@ module AvroContractTesting
           public: false,
           content_type: 'application/json'
         )
+
+        # TODO: remove second file creation logic once all schemas are moved over to the prefix convention
+        files.create(
+          key: "#{schema_name}/#{config.application_name}.avsc",
+          body: schema_store.find(schema_name).to_s,
+          public: false,
+          content_type: 'application/json'
+        )
       end
 
       def storage
