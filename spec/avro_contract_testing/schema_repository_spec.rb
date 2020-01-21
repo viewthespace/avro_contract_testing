@@ -98,7 +98,7 @@ describe AvroContractTesting::SchemaRepository do
     subject(:consumer) { described_class.consumers('test_schema_name').first }
 
     it { is_expected.to be_a(AvroContractTesting::Consumer) }
-    it { expect(consumer.name).to eq 'test_application' }
+    it { expect(consumer.application_name).to eq 'test_application' }
     it { expect(consumer.schema).to eq(Avro::Schema.parse(consumer_schema_body)) }
 
     context 'when there is an identical file with a consumer prefix' do
@@ -131,6 +131,44 @@ describe AvroContractTesting::SchemaRepository do
       it 'only retrieves the consumer schema' do
         expect(consumer.schema.name).to eq(Avro::Schema.parse(consumer_schema_body).name)
         expect(described_class.consumers('test_schema_name').length).to eq 1
+      end
+    end
+  end
+
+  describe '.producers' do
+    let(:consumer_schema_body) { '{"name":"consumer test","type":"record","fields":[]}' }
+    let(:producer_schema_body) { '{"name":"producer test","type":"record","fields":[]}' }
+
+    before do
+      storage.directories.get(s3_bucket_name).files.create(
+        key: "#{producer_role}/test_schema_name/test_application.avsc",
+        body: producer_schema_body,
+        public: false,
+        content_type: 'application/json'
+      )
+    end
+
+    subject(:producer) { described_class.producers('test_schema_name').first }
+
+    it { is_expected.to be_a(AvroContractTesting::Producer) }
+    it { expect(producer.application_name).to eq 'test_application' }
+    it { expect(producer.schema).to eq(Avro::Schema.parse(producer_schema_body)) }
+
+    context 'when there are consumers and producers for the same schema' do
+      before do
+        storage.directories.get(s3_bucket_name).files.create(
+          key: "#{consumer_role}/test_schema_name/test_application.avsc",
+          body: consumer_schema_body,
+          public: false,
+          content_type: 'application/json'
+        )
+      end
+
+      let(:producer) { described_class.producers('test_schema_name').first }
+
+      it 'only retrieves the producer schema' do
+        expect(producer.schema.name).to eq(Avro::Schema.parse(producer_schema_body).name)
+        expect(described_class.producers('test_schema_name').length).to eq 1
       end
     end
   end

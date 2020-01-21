@@ -3,7 +3,7 @@
 require 'avro_turf'
 
 module AvroContractTesting
-  class Consumer
+  class Producer
     attr_reader :application_name, :schema
 
     def initialize(application_name:, schema:)
@@ -11,9 +11,9 @@ module AvroContractTesting
       @schema = Avro::Schema.parse(schema)
     end
 
-    def compatible?(producer_schema)
-      writer_schema = Avro::Schema.parse(producer_schema)
-      Avro::SchemaCompatibility.can_read?(writer_schema, schema)
+    def compatible?(consumer_schema)
+      reader_schema = Avro::Schema.parse(consumer_schema)
+      Avro::SchemaCompatibility.can_read?(schema, reader_schema)
     end
   end
 end
