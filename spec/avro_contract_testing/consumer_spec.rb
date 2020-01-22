@@ -4,7 +4,7 @@ require 'avro_contract_testing/consumer'
 
 describe AvroContractTesting::Consumer do
   describe '#compatible?' do
-    subject(:consumer) { described_class.new(name: 'test_name', schema: consumer_schema) }
+    subject(:consumer) { described_class.new(application_name: 'test_name', schema: consumer_schema) }
 
     context 'with identical schemas' do
       let(:consumer_schema) { '{"name":"test","type":"record","fields":[]}' }
