@@ -19,9 +19,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'fog-aws', '~> 3.0'
 
   spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'pry', '~> 0.12.2'
-  spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rspec_junit_formatter'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-rspec'
