@@ -1,3 +1,4 @@
+
 # frozen_string_literal: true
 
 lib = File.expand_path('lib', __dir__)
@@ -15,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'avro', '~> 1.9.0'
-  spec.add_dependency 'avro_turf', '~> 0.9'
+  spec.add_dependency 'avro_turf', '~> 1.7'
   spec.add_dependency 'fog-aws', '~> 3.0'
 
   spec.add_development_dependency 'bundler', '~> 2.0'
