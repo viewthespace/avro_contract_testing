@@ -12,6 +12,7 @@ describe AvroContractTesting::SchemaRepository do
   let(:consumer_role) { 'consumer' }
   let(:access_key_id) { 'test_id' }
   let(:access_key) { 'test_key' }
+  let(:region) { 'us-east-2' }
 
   before do
     AvroContractTesting.configure do |config|
@@ -20,6 +21,7 @@ describe AvroContractTesting::SchemaRepository do
       config.application_name = application_name
       config.aws_access_key_id = access_key_id
       config.aws_secret_access_key = access_key
+      config.region = region
     end
 
     Fog.mock!
