@@ -23,6 +23,7 @@ AvroContractTesting.configure do |config|
   config.aws_access_key_id = AWS_ACCESS_KEY_ID
   config.aws_secret_access_key = AWS_SCECRET_KEY
   config.schema_path = SCHEMA_PATH
+  config.region = REGION
 end
 ``` 
 

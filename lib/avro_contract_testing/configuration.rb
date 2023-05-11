@@ -6,6 +6,11 @@ module AvroContractTesting
                   :schema_path,
                   :application_name,
                   :aws_access_key_id,
-                  :aws_secret_access_key
+                  :aws_secret_access_key,
+                  :region
+
+    def region
+      @region || 'us-east-2'
+    end
   end
 end
